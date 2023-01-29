@@ -10,44 +10,35 @@ const addEmployee = require('./helpers/addEmployee.js');
 const viewAllRoles = require('./helpers/viewAllRoles.js');
 
 
-// set up our server listener
+
 const PORT = process.env.PORT || 3001;
 const app = express();
-// //middleware for express.js
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// Connect to database
+
 const db = mysql.createConnection(
   {
     host: 'localhost',
-    // MySQL username,
     user: 'root',
-    // MySQL password
     password: 'Jacob123!',
     database: 'sqltracker_db'
   },
   console.log(`Hello, you are currently connected to the sqltracker_db database.`)
 );
-
-// Default response for any other request (Not Found)
-// not using express.
 app.use((req, res) => {
-    res.status(404).end();
-  });
-  
-  app.listen(PORT, () => {
-    console.log(`    Thank you for using the sqltracker :)`);
-  });
+  res.status(404).end();
+});
 
-
- 
+app.listen(PORT, () => {
+  console.log(`    Thank you for using the sqltracker :)`);
+});
 const userAnswers = {
   updateEmployeeRole: async () => {
     try {
       console.log("currently unavailable")
     }
-    catch (err){
+    catch (err) {
       console.log(err);
     }
   },
@@ -131,33 +122,33 @@ const userAnswers = {
       const questionThree = [
         {
           type: 'input',
-          name: 'given_name',
-          message: 'What is the first name?',
+          name: 'firstName2',
+          message: 'first name:',
         },
         {
           type: 'input',
-          name: 'surname',
-          message: 'What is the last name?',
+          name: 'lastName2',
+          message: 'last name:',
         },
         {
           type: 'list',
-          name: 'addedRole',
-          message: 'What is this employee\'s role?',
+          name: 'addRole',
+          message: 'What is the employee\'s role?',
           choices: async () => {
             const rolePick = [{ name: 'None', value: null }];
             const roleChoices = await userAnswers.viewAllRoles();
-            roleChoices.forEach(({ id, title }) => rolePick.push({ name: title, value: { id, title }}));
+            roleChoices.forEach(({ id, title }) => rolePick.push({ name: title, value: { id, title } }));
             return rolePick;
           },
         },
         {
           type: 'list',
-          name: 'managerTie',
-          message: "Who is this employee's manager?",
+          name: 'manager',
+          message: "employee manager:",
           choices: async () => {
             const managerPick = [{ name: 'None', value: null }];
             const currentEmployees = await userAnswers.showEmployees();
-            currentEmployees.forEach(({ id, firstName, lastName }) => managerPick.push({ name: `${firstName} ${lastName}`, value: { id }}));
+            currentEmployees.forEach(({ id, firstName, lastName }) => managerPick.push({ name: `${firstName} ${lastName}`, value: { id } }));
             return managerPick;
           },
         },
