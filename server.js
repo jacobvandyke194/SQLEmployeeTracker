@@ -153,8 +153,8 @@ const userAnswers = {
           },
         },
       ];
-      const { given_name, surname, addedRole, managerTie } = await inquirer.prompt(questionThree);
-      const query = `INSERT INTO employee (firstName, lastName, roleID, managerID) VALUES ("${given_name}", "${surname}", ${addedRole.id || null}, ${managerTie.id || null} )`;
+      const { firstName2, lastName2, addRole, manager } = await inquirer.prompt(questionThree);
+      const query = `INSERT INTO employee (firstName, lastName, roleID, managerID) VALUES ("${firstName2}", "${lastName2}", ${addRole.id || null}, ${manager.id || null} )`;
       const data = await db.promise().query(query);
     } catch (err) {
       console.log(err);
