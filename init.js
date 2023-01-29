@@ -1,10 +1,7 @@
-const selections = require('./server.js');
+const userAnswers = require('./server.js');
 const inquirer = require('inquirer');
 const showDepartments = require('./helpers/showDepartments.js');
 
-// console.log(selections);
-
-// command line prompts
 const initQuestions = async () => {
     try {
         const questions = [
@@ -14,44 +11,41 @@ const initQuestions = async () => {
                 message: "Select from the options below:",
                 choices: [
                     "Show Employees",
+                    "Show Departments",
+                    "Show Roles",
                     "Add New Employee",
                     "Update Employee Role",
-                    "Show Roles",
                     "Add New Role",
-                    "Show Departments",
                     "Add New Department",
                     "Quit"
                 ],
             },
         ];
-        // call to function depending on what the user selects
         const userAnswer = await inquirer.prompt(questions);
-        console.log(userAnswer);
         switch (userAnswer.answer) {
             case "Show Employees":
-                const employeeList = await selections.showEmployees();
+                const employeeList = await userAnswers.showEmployees();
                 console.table(employeeList);
                 break;
                 case "Show Roles":
-                    const allRoleList = await selections.viewAllRoles();
+                    const allRoleList = await userAnswers.viewAllRoles();
                     console.table(allRoleList);
                     break;
-                case "Show  Departments":
-                    showDepartments();
-                    // const departmentsList = await selections.showDepartments();
-                    // console.table(departmentsList);
+                case "Show Departments":
+                    const departmentsList = await userAnswers.showDepartments();
+                    console.table(departmentsList);
                     break;
             case "Add New Employee":
-                await selections.addEmployee();
+                await userAnswers.addEmployee();
                 break;
             case "Update Employee Role":
-                await selections.updateEmployeeRole();
+                await userAnswers.updateEmployeeRole();
                 break;
             case "Add New Role":
-                await selections.addRole();
+                await userAnswers.addRole();
                 break;
             case "Add New Department":
-                await selections.addDepartment();
+                await userAnswers.addDepartment();
                 break;
             case "Quit":
                 process.exit();

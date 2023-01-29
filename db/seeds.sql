@@ -1,4 +1,4 @@
-USE employees_db;
+USE sqltracker_db;
 
 INSERT INTO department (name)
 VALUES ("Human Resources"),

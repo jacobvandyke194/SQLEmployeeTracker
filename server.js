@@ -3,12 +3,12 @@ const mysql = require('mysql2');
 const consoleTable = require('console.table');
 const express = require('express');
 const initQuestions = require('./init');
-// const showDepartments = require('./helpers/showDepartments.js');
-// const addDepartments = require('./helpers/addDepartments.js');
-// const Departments = require('./helpers/showDepartments.js');
-// const showDepartments = require('./helpers/showDepartments.js');
-// const showDepartments = require('./helpers/showDepartments.js');
-// const showDepartments = require('./helpers/showDepartments.js');
+const showDepartments = require('./helpers/showDepartments.js');
+const addDepartments = require('./helpers/addDepartment.js');
+const addRole = require('./helpers/addRole.js');
+const addEmployee = require('./helpers/addEmployee.js');
+const viewAllRoles = require('./helpers/viewAllRoles.js');
+
 
 // set up our server listener
 const PORT = process.env.PORT || 3001;
@@ -25,9 +25,9 @@ const db = mysql.createConnection(
     user: 'root',
     // MySQL password
     password: 'Jacob123!',
-    database: 'employees_db'
+    database: 'sqltracker_db'
   },
-  console.log(`Hello, you are currently connected to the employees_db database.`)
+  console.log(`Hello, you are currently connected to the sqltracker_db database.`)
 );
 
 // Default response for any other request (Not Found)
@@ -37,25 +37,29 @@ app.use((req, res) => {
   });
   
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`    Thank you for using the sqltracker :)`);
   });
 
 
  
-const selections = {
-  // function to show all departments
-  showDepartments: 
-  async () => {
+const userAnswers = {
+  updateEmployeeRole: async () => {
     try {
-    showDepartments
-  //     const query = "SELECT * FROM department";
-  //     const [data] = await db.promise().query(query);
-  //     return data;
+      console.log("currently unavailable")
+    }
+    catch (err){
+      console.log(err);
+    }
+  },
+  showDepartments: async () => {
+    try {
+      const query = "SELECT * FROM department";
+      const [data] = await db.promise().query(query);
+      return data;
     } catch (err) {
       console.log(err);
     }
   },
-  // function to Show roles
   viewAllRoles: async () => {
     try {
       const query = "SELECT role.id, role.title, role.salary, department.name AS department FROM role LEFT JOIN department ON role.departmentID = department.id";
@@ -65,7 +69,6 @@ const selections = {
       console.log(err);
     }
   },
-  // function to see all employees
   showEmployees: async () => {
     try {
       const query = `SELECT employee.firstName, employee.lastName, role.title AS title, role.salary AS salary, department.name AS department, CONCAT (manager.firstName, " ", manager.lastName) AS manager FROM employee LEFT JOIN role ON employee.roleID = role.id LEFT JOIN department ON role.departmentID = department.id LEFT JOIN employee manager ON employee.managerID = manager.id`;
@@ -75,7 +78,6 @@ const selections = {
       console.log(err);
     }
   },
-// function to add a new department
   addDepartment: async () => {
     try {
       const questionOne = [
@@ -92,7 +94,6 @@ const selections = {
       console.log(err);
     }
   },
-  // function to add a new role to database
   addRole: async () => {
     try {
       const questionTwo = [
@@ -111,7 +112,7 @@ const selections = {
           name: 'assignDepartment',
           message: `Please select which department this new role falls into`,
           choices: async () => {
-            const departments = await selections.showDepartments();
+            const departments = await userAnswers.showDepartments();
             const userPicks = [{ name: 'None', value: null }];
             departments.forEach(({ id, name }) => userPicks.push({ name, value: id }));
             return userPicks;
@@ -125,7 +126,6 @@ const selections = {
       console.log(err);
     }
   },
-  // function to add a new employee to database
   addEmployee: async () => {
     try {
       const questionThree = [
@@ -145,7 +145,7 @@ const selections = {
           message: 'What is this employee\'s role?',
           choices: async () => {
             const rolePick = [{ name: 'None', value: null }];
-            const roleChoices = await selections.viewAllRoles();
+            const roleChoices = await userAnswers.viewAllRoles();
             roleChoices.forEach(({ id, title }) => rolePick.push({ name: title, value: { id, title }}));
             return rolePick;
           },
@@ -156,7 +156,7 @@ const selections = {
           message: "Who is this employee's manager?",
           choices: async () => {
             const managerPick = [{ name: 'None', value: null }];
-            const currentEmployees = await selections.showEmployees();
+            const currentEmployees = await userAnswers.showEmployees();
             currentEmployees.forEach(({ id, firstName, lastName }) => managerPick.push({ name: `${firstName} ${lastName}`, value: { id }}));
             return managerPick;
           },
@@ -172,4 +172,4 @@ const selections = {
 };
 
 
-module.exports = selections;
+module.exports = userAnswers;
