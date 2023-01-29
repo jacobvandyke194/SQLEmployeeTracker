@@ -1,6 +1,10 @@
 const userAnswers = require('./server.js');
 const inquirer = require('inquirer');
 const showDepartments = require('./helpers/showDepartments.js');
+const addDepartment = require('./helpers/addDepartment.js');
+const addRole = require('./helpers/addRole.js');
+const showEmployees = require('./helpers/showEmployees.js');
+const viewAllRoles = require('./helpers/viewAllRoles.js');
 
 const initQuestions = async () => {
     try {
